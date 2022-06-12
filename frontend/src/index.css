@@ -1,0 +1,59 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+}
+
+button,
+a {
+    font-family: inherit;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.join {
+    min-height: 70vh;
+}
+
+.join label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.join input {
+    margin-bottom: .5em;
+    height: 34px;
+    width: 200px;
+}
+
+.join button {
+    display: block;
+    margin-top: .5em;
+    background-color: #343434;
+    color: #fff;
+    padding: 1em 0;
+    width: 100%;
+    border-radius: 3px;
+}
+
+.chat h1 {
+    text-align: center;
+    background-color: #343434;
+    color: #fff;
+    padding: 1em 0;
+}
