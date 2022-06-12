@@ -1,4 +1,4 @@
-const users = [];
+let users = [];
 
 const addUser = ({ name, room, id }) => {
     const exists = users.some(user => user.name === name && user.room === room);
@@ -13,12 +13,13 @@ const addUser = ({ name, room, id }) => {
 }
 
 const removeUser = (id) => {
-    const exists = users.some(user => user.id = id);
+    const exists = users.some(user => user.id === id);
 
     if (!exists) {
         return { error: 'No user' }
     }
-    return users.filter(user => user.id !== id);
+    users = users.filter(user => user.id !== id);
+    return users.map(user => user.name);
 }
 
 const getRoomUsers = (room) => {

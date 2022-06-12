@@ -1,9 +1,9 @@
-import {FaUser} from 'react-icons/fa';
+import {FaUserCircle} from 'react-icons/fa';
 
 const UserInfo = ({user}) => {
   return (
     <div className="user">
-        <FaUser />
+        <FaUserCircle />
         <p>{user}</p>
     </div>
   )

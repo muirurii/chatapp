@@ -1,81 +1,94 @@
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import {FaArrowRight} from 'react-icons/fa';
-import {CgUserList} from 'react-icons/cg';
-import UserInfo from '../components/UserInfo'
+import { useNavigate, useParams } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa";
+import { CgUserList } from "react-icons/cg";
+import UserInfo from "../components/UserInfo";
+import Message from "../components/Message";
 
 let socket;
 
-const Chat = () => {
+const Chat = ({resetError}) => {
   const { name, room } = useParams();
   const [text, setText] = useState("");
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
-
+  const navigate = useNavigate();
   /*
   Handle user joining a room
 */
   useEffect(() => {
     socket = io("http://localhost:5000");
-    socket.on("connect", () => console.log(socket.id));
-    socket.emit("join", { name, room }, (error) => console.log(error));
-    // socket.emit('')
-    socket.on('roomUsers',(data)=>{
-      if(data.length){
-        setUsers(data);
-      }
-    })
+    socket.on("connect",()=> '');
+    if (!name) return;
+    /*
+      Emit join message, callback is called from the server 
+    */
+    socket.emit("join", { name, room }, (error) =>{
+      resetError(error)
+      navigate('/')
+    } );
+
     return () => {
       socket.disconnect();
       socket.off();
     };
-  }, [name, room]);
+  }, [name, room,navigate]);
 
   /*
-  Handle sending message to the room
+  Handle sending message to the room and get room users
 */
-
-
   useEffect(() => {
     socket.on("message", (message) => {
-      setMessages([...messages,message]);
-      console.log(message);
+      setMessages([...messages, message]);
     });
-  }, [messages]);
 
+    socket.on("roomUsers", (data) => {
+      if (data.length) {
+      const arrange = data.filter(n=> n !== name);
+        arrange.unshift(name);
+        setUsers(arrange);
+      }
+    });
+  }, [messages,name]);
+
+  /*
+  Send message to room
+  */
   const sendMessage = (e) => {
     e.preventDefault();
-    if (text) {
+    if (text.trim()) {
       socket.emit("sendText", text, (data) => {
-        if(data.error){
-          console.log(data.message);
+        if (data.error) {
+          // console.log(data.message);
         }
-        setText("")
+        setText("");
       });
     }
   };
 
   return (
+    <div className="center">
     <div className="chat">
       <div className="users">
-        <h3 className="center"><CgUserList/><span>Active users ({users.length}) </span></h3>
-      <div className="user-list">
-      {users.length && users.map(user=> <UserInfo key={user} user={user} />)}
+        <h3 className="center">
+          <CgUserList />
+          <span>Active users ({users.length}) </span>
+        </h3>
+        <div className="user-list">
+          {users.length &&
+            users.map((user) => <UserInfo key={user} user={user} />)}
+        </div>
       </div>
-      </div>
-     <div className="cont">
-      <h3 className="center"><span>{room.toLowerCase()}</span></h3>
+      <div className="cont">
+        <h3 className="center">
+          <span>{room.toLowerCase()}</span>
+        </h3>
         <div className="texts">
-          {messages.length && messages.map((message,i) => {
-            return <p key={i} className={`${message.user === name ? 'me' : message.user === 'admin' ? 'admin' : 'other'}`}>
-                {message.message}
-                {message.user !== 'admin' && <>
-                <span className="sender">{message.user}</span>
-                {/* <span className="time">{new Date(message.time).toLocaleString('en-US')}</span> */}
-                </>}
-                </p>
-          })}
+          {messages.length &&
+            messages.map((message, i) => (
+              <Message key={i} message={message} name={name} />
+            ))}
         </div>
         <form className="chat_form" onSubmit={sendMessage}>
           <input
@@ -84,9 +97,12 @@ const Chat = () => {
             placeholder="send message"
             onChange={(e) => setText(e.target.value)}
           />
-          <button type="submit"><FaArrowRight /></button>
+          <button type="submit">
+            <FaArrowRight />
+          </button>
         </form>
       </div>
+    </div>
     </div>
   );
 };
