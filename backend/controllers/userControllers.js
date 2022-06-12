@@ -22,7 +22,7 @@ const removeUser = (id) => {
 }
 
 const getRoomUsers = (room) => {
-    return users.filter(user => user.room === room);
+    return users.filter(user => user.room === room).map(user => user.name);
 }
 
 const getUser = (id) => {

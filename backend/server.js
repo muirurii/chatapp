@@ -10,31 +10,37 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-    console.log('connected', socket.id);
     socket.on('join', (data, callback) => {
         const { error, user } = userControllers.addUser({...data, id: socket.id })
 
         if (error) return callback(error);
-
-        socket.emit('message', { user: 'admin', message: `${user.name} joined` });
-        socket.broadcast.to(user.room).emit('message', { user: 'admin', message: `${user.name} joined` });
+        const getUsers = userControllers.getRoomUsers(data.room);
+        // console.log(getUsers)
+        socket.emit('roomUsers', getUsers)
+        socket.broadcast.to(user.room).emit('roomUsers', getUsers)
+        socket.emit('message', { user: 'admin', message: `${user.name} joined the chat` });
+        socket.broadcast.to(user.room).emit('message', { user: 'admin', message: `${user.name} joined the chat` });
         socket.join(data.room);
     })
 
     socket.on('sendText', (text, callback) => {
         const user = userControllers.getUser(socket.id);
-        if (!user.room) {
-            return console.log(user)
+        if (!user) {
+            return callback({ error: true, message: 'Youre not connected to a room' })
         } else {
-            socket.broadcast.to(user.room).emit('message', { name: user.name, message: text });
-            socket.emit('message', { user: user.name, message: text });
-            console.log(text)
-            callback()
+            socket.broadcast.to(user.room).emit('message', { user: user.name, message: text, time: Date.now() });
+            socket.emit('message', { user: user.name, message: text, time: Date.now() });
+            callback({ error: false })
         }
     })
 
-    socket.on('disconnect', () => {
-        console.log('disconnected')
+    socket.on('disconnect', (t) => {
+        // userControllers.removeUser(socket.id)
+        // const user = userControllers.getUser(socket.id);
+        // if (!user) return;
+        // socket.broadcast.to(user.room).emit('message', { user: 'admin', message: `${user.name} left`, time: Date.now() });
+        // socket.broadcast.to(user.room).emit('roomUsers', userControllers.removeUser(socket.id))
+        // console.log('didc', user)
     })
 });
 
