@@ -33,7 +33,7 @@ const Chat = ({resetError}) => {
       socket.disconnect();
       socket.off();
     };
-  }, [name, room,navigate]);
+  }, [name, room,navigate,resetError]);
 
   /*
   Handle sending message to the room and get room users
@@ -60,7 +60,7 @@ const Chat = ({resetError}) => {
     if (text.trim()) {
       socket.emit("sendText", text, (data) => {
         if (data.error) {
-          // console.log(data.message);
+         
         }
         setText("");
       });

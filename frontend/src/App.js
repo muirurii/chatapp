@@ -4,13 +4,13 @@ import Chat from './pages/Chat';
 import Join from './pages/Join';
 
 function App() {
-  const[error,setError] = useState('err');
+  const[error,setError] = useState('');
   const resetError = (payload)=> setError(payload);
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' eror={error} element={<Join />} />
-        <Route path='/chat/:name/:room' props={resetError} element={<Chat />} />
+        <Route path='/' element={<Join error={error}/>} />
+        <Route path='/chat/:name/:room' element={<Chat resetError={resetError} />} />
       </Routes>
     </BrowserRouter>
   );

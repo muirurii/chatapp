@@ -3,7 +3,7 @@ let users = [];
 const addUser = ({ name, room, id }) => {
     const exists = users.some(user => user.name === name && user.room === room);
     if (exists) {
-        return { error: 'username taken', user: null }
+        return { error: 'username taken! Try another', user: null }
     }
 
     const user = { name, id, room }

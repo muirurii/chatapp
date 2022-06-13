@@ -15,9 +15,9 @@ io.on("connection", (socket) => {
         const { error, user } = userControllers.addUser({...data, id: socket.id });
 
         if (error) return callback(error);
-        const getUsers = userControllers.getRoomUsers(data.room);
-        socket.emit("roomUsers", getUsers);
-        socket.broadcast.to(user.room).emit("roomUsers", getUsers);
+        const usersInRoom = userControllers.getRoomUsers(data.room);
+        socket.emit("roomUsers", usersInRoom);
+        socket.broadcast.to(user.room).emit("roomUsers", usersInRoom);
         socket.emit("message", {
             user: "admin",
             message: `You joined the chat`,
@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
         if (!user) {
             return callback({
                 error: true,
-                message: "Youre not connected to a room",
+                message: "You're not connected to a room",
             });
         } else {
             socket.broadcast
@@ -55,7 +55,6 @@ io.on("connection", (socket) => {
         const user = userControllers.getUser(socket.id);
         if (!user) return;
         const remUsers = userControllers.removeUser(socket.id);
-        // console.log(remUsers)
         if (!remUsers.length) return;
         socket.broadcast
             .to(user.room)

@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaComments } from "react-icons/fa";
 
-const Join = ({eror}) => {
+const Join = ({error}) => {
   const [details, setDetails] = useState({ name: "", room: "" });
   const navigate = useNavigate();
-console.log(eror)
+console.log(error)
   const handleJoin = (e) => {
     e.preventDefault();
     if (!details.name || !details.room) return;
@@ -18,7 +18,7 @@ console.log(eror)
           Join a chatroom <FaComments />
         </h1>
         <form onSubmit={handleJoin}>
-          <p className="error">{eror}</p>
+          <p className="error">{error}</p>
           <label htmlFor="name">username</label>
           <input
             type="text"
