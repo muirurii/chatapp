@@ -1,6 +1,7 @@
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const path = require("path");
 const PORT = process.env.PORT || 5000;
 const userControllers = require("./controllers/userControllers");
 
@@ -22,12 +23,10 @@ io.on("connection", (socket) => {
             user: "admin",
             message: `You joined the chat`,
         });
-        socket.broadcast
-            .to(user.room)
-            .emit("message", {
-                user: "admin",
-                message: `${user.name} joined the chat`,
-            });
+        socket.broadcast.to(user.room).emit("message", {
+            user: "admin",
+            message: `${user.name} joined the chat`,
+        });
         socket.join(data.room);
     });
 
@@ -56,15 +55,18 @@ io.on("connection", (socket) => {
         if (!user) return;
         const remUsers = userControllers.removeUser(socket.id);
         if (!remUsers.length) return;
-        socket.broadcast
-            .to(user.room)
-            .emit("message", {
-                user: "admin",
-                message: `${user.name} left`,
-                time: Date.now(),
-            });
+        socket.broadcast.to(user.room).emit("message", {
+            user: "admin",
+            message: `${user.name} left`,
+            time: Date.now(),
+        });
         socket.broadcast.to(user.room).emit("roomUsers", remUsers);
     });
 });
 
+app.use(express.static(path.join(__dirname, "..", "frontend", "build")));
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "frontend", "build", "index.html"));
+});
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, "..", "frontend", "build", "404.html")));
 httpServer.listen(PORT, () => console.log("server started"));

@@ -4,7 +4,7 @@ const Message = ({message,name}) => {
             {message.message}
                 {message.user !== 'admin' && <>
                 <span className="sender">{message.user === name ? 'you': message.user}</span>
-                {/* <span className="time">{new Date(message.time).toLocaleString('en-US')}</span> */}
+                <span className="time">{new Date(message.time).toLocaleString('en-US')}</span>
         </>}
     </p>
   )

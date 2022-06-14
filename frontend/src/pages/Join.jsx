@@ -5,7 +5,6 @@ import { FaComments } from "react-icons/fa";
 const Join = ({error}) => {
   const [details, setDetails] = useState({ name: "", room: "" });
   const navigate = useNavigate();
-console.log(error)
   const handleJoin = (e) => {
     e.preventDefault();
     if (!details.name || !details.room) return;
