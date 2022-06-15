@@ -76,8 +76,8 @@ const Chat = ({ resetError }) => {
             <span>Active users ({users.length}) </span>
           </h3>
           <div className="user-list">
-            {users.length &&
-              users.map((user) => <UserInfo key={user} user={user} />)}
+            {users.length ?
+              users.map((user) => <UserInfo key={user} user={user} />) : null}
           </div>
         </div>
         <div className="cont">
@@ -86,10 +86,10 @@ const Chat = ({ resetError }) => {
           </h3>
           <ScrollToBottom className="texts" followButtonClassName="btn-down">
             <div>
-              {messages.length &&
+              {messages.length ?
                 messages.map((message, i) => (
                   <Message key={i} message={message} name={name} />
-                ))}
+                )) : null}
             </div>
           </ScrollToBottom>
           <form className="chat_form" onSubmit={sendMessage}>
