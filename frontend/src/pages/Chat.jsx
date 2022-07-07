@@ -19,7 +19,7 @@ const Chat = ({ resetError }) => {
   Handle user joining a room
 */
   useEffect(() => {
-    socket = io("");
+    socket = io("https://mychatappme.herokuapp.com");
     socket.on("connect", () => "");
     if (!name) return;
     /*
