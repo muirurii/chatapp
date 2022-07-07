@@ -19,7 +19,7 @@ const Chat = ({ resetError }) => {
   Handle user joining a room
 */
   useEffect(() => {
-    socket = io("http://localhost:5000");
+    socket = io("");
     socket.on("connect", () => "");
     if (!name) return;
     /*
